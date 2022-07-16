@@ -9,10 +9,11 @@ namespace mars_task
     public class Creature : Entity
     {
         /// <summary>
-        /// Конструктор сущуства
+        /// Конструктор
         /// </summary>
-        /// <param name="mainColor">Цвет</param>
-        /// <param name="type">Тип</param>
+        /// <param name="mainColor">цвет</param>
+        /// <param name="type">тип</param>
+        /// <param name="startHeightField">начальные точки</param>
         public Creature(Color mainColor, int type, int startHeightField)
         {
             MainColor = mainColor;
@@ -20,24 +21,25 @@ namespace mars_task
             _points.Add(new Point(200, startHeightField - 30));
             _points.Add(new Point(200, startHeightField + 30));
         }
-
+        /// <summary>
+        /// отрисовка сущности
+        /// </summary>
+        /// <param name="g">средство рисование</param>
+        /// <param name="traps">расположение ловушек</param>
         public override void DrawEntity(Graphics g, Tuple<int, int, int>[] traps)
         {
-            Brush brush = new SolidBrush(Color.Gray);
-            int _startHeightField = 132 - 90;
-            int _startWidthField = 200 - 90;
-            int cell = 60;
             Pen pen = new Pen(MainColor, 2);
+            Brush brush = new SolidBrush(Color.Gray);
             for (int i = 1; i < _points.Count; i++)
             {
-                pen = new Pen(MainColor, 2);
                 g.DrawLine(pen, _points[i - 1].X, _points[i - 1].Y, _points[i].X, _points[i].Y);
             }
         }
         /// <summary>
         /// движение
         /// </summary>
-        /// <param name="direction">направления движений</param>
+        /// <param name="directions">направления</param>
+        /// <param name="cell">ширина клетки</param>
         public override void MoveEntity(Array directions, int cell)
         {
             Random rnd = new Random();
@@ -99,8 +101,6 @@ namespace mars_task
                         }
                         break;
                 }
-                if (!outField)
-                    break;
             }
         }
     }

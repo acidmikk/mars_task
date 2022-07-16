@@ -28,11 +28,11 @@ namespace mars_task
         /// ловушки
         /// </summary>
         private Tuple<int, int, int>[] traps = new Tuple<int, int, int>[9];
-        private List<IEntity> entities = new List<IEntity>()
+        private List<IEntity> entities = new List<IEntity>(3)
         {
             new Creature(Color.Red, 0, _startHeightField),
             new Creature(Color.Orange, 0, _startHeightField),
-            new Creature(Color.Gray, 0, _startHeightField)
+            new Creature(Color.BlueViolet, 0, _startHeightField)
         };
         public Form1()
         {
@@ -112,11 +112,10 @@ namespace mars_task
         private void DrawAndMoveCreature(Graphics g, IEntity entity)
         {
             List<Point> points = entity.GetPoints();
-            points.Add(new Point(200, _startHeightField - 30));
-            points.Add(new Point(200, _startHeightField + 30));
             int typeEntity = entity.GetTypeEntity();
             entity.MoveEntity(directions, cell);
             entity.SetPoints(points);
+            brushTraps(g);
             for (int i = 0; i < entities.Count; i++)
             {
                 int typeEnt = entities[i].GetTypeEntity();
@@ -134,6 +133,39 @@ namespace mars_task
             Graphics g = Graphics.FromImage(bmps[0]);
             DrawAndMoveCreature(g, entities[typeEntity - 1]);
         }
+        private void brushTraps(Graphics g)
+        {
+            Brush brush = new SolidBrush(Color.Gray);
+            for (int i = 0; i < entities.Count; i++)
+            {
+                if (entities[i].GetTypeEntity() != 0)
+                {
+                    Pen pen = new Pen(Color.Black, 3);
+                    List<Point> points = entities[i].GetPoints();
+                    for (int j = 1; j < points.Count - 1; j++)
+                    {
+                        int num_trap = (points[j].X - _startWidthField) / cell + (points[j].Y - _startHeightField) / cell * 3;
+                        if (0 <= num_trap && num_trap < 9)
+                        {
+                            if (traps[num_trap] != null)
+                            {
+                                int x = traps[num_trap].Item1;
+                                int y = traps[num_trap].Item2;
+                                g.FillRectangle(brush, x + 2, y + 2, 57, 57);
+                                if (traps[num_trap].Item3 == 1)
+                                {
+                                    DrawBell(x, y, g);
+                                }
+                                else if (traps[num_trap].Item3 == 2)
+                                {
+                                    DrawProto(x, y, g);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         private void catButton_Click(object sender, EventArgs e)
         {
             createEntity(Color.Red, 1, _startHeightField);
@@ -144,7 +176,7 @@ namespace mars_task
         }
         private void ghostButton_Click(object sender, EventArgs e)
         {
-            createEntity(Color.Gray, 3, _startHeightField);
+            createEntity(Color.BlueViolet, 3, _startHeightField);
         }
         private void generateButton_Click(object sender, EventArgs e)
         {
