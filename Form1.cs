@@ -138,27 +138,46 @@ namespace mars_task
             Brush brush = new SolidBrush(Color.Gray);
             for (int i = 0; i < entities.Count; i++)
             {
-                if (entities[i].GetTypeEntity() != 0)
+                int typeEntity = entities[i].GetTypeEntity();
+                if (typeEntity != 0)
                 {
                     Pen pen = new Pen(Color.Black, 3);
                     List<Point> points = entities[i].GetPoints();
+                    int[,] marsh = new int[3, 3] { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } };
                     for (int j = 1; j < points.Count - 1; j++)
                     {
                         int num_trap = (points[j].X - _startWidthField) / cell + (points[j].Y - _startHeightField) / cell * 3;
+                        marsh[num_trap / 3, num_trap % 3] += 1;
                         if (0 <= num_trap && num_trap < 9)
                         {
                             if (traps[num_trap] != null)
                             {
                                 int x = traps[num_trap].Item1;
                                 int y = traps[num_trap].Item2;
-                                g.FillRectangle(brush, x + 2, y + 2, 57, 57);
                                 if (traps[num_trap].Item3 == 1)
                                 {
-                                    DrawBell(x, y, g);
+                                    if (typeEntity == 2 && marsh[num_trap / 3, num_trap % 3] == 1)
+                                    {
+                                        g.FillRectangle(brush, x + 2, y + 2, 57, 57);
+                                        DrawBell(x, y, g);
+                                    } else if (typeEntity == 1 && marsh[num_trap / 3, num_trap % 3] == 2)
+                                    {
+                                        g.FillRectangle(brush, x + 2, y + 2, 57, 57);
+                                        DrawBell(x, y, g);
+                                    }
                                 }
                                 else if (traps[num_trap].Item3 == 2)
                                 {
-                                    DrawProto(x, y, g);
+                                    if (typeEntity == 3 && marsh[num_trap / 3, num_trap % 3] == 1)
+                                    {
+                                        g.FillRectangle(brush, x + 2, y + 2, 57, 57);
+                                        DrawProto(x, y, g);
+                                    }
+                                    else if (typeEntity == 1 && marsh[num_trap / 3, num_trap % 3] == 2)
+                                    {
+                                        g.FillRectangle(brush, x + 2, y + 2, 57, 57);
+                                        DrawProto(x, y, g);
+                                    }
                                 }
                             }
                         }
