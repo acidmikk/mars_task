@@ -8,8 +8,8 @@ namespace mars_task
 {
     public interface IEntity
     {
-        void MoveEntity(Array directions, int cell);
-        void DrawEntity(Graphics g, Tuple<int, int, int>[] traps);
+        void MoveEntity(Array directions, int _startHeightField, int _startWidthField, int cell);
+        void DrawEntity(Graphics g);
         void SetMainColor(Color color);
         Color GetMainColor();
         int GetTypeEntity();

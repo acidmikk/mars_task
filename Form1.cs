@@ -28,20 +28,32 @@ namespace mars_task
         /// ловушки
         /// </summary>
         private Tuple<int, int, int>[] traps = new Tuple<int, int, int>[9];
+        /// <summary>
+        /// список с существами
+        /// </summary>
         private List<IEntity> entities = new List<IEntity>(3)
         {
             new Creature(Color.Red, 0, _startHeightField),
             new Creature(Color.Orange, 0, _startHeightField),
             new Creature(Color.BlueViolet, 0, _startHeightField)
         };
+        /// <summary>
+        /// иницилизация формы
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
-            Draw();
+            draw();
         }
+        /// <summary>
+        /// массив битмапов: основной и резерв
+        /// </summary>
         Bitmap[] bmps = new Bitmap[2];
         Random rnd = new Random();
-        private void Draw()
+        /// <summary>
+        /// отрисовка и расположение поля и ловушек
+        /// </summary>
+        private void draw()
         {
             bmps[0] = new Bitmap(pictureBox.Width, pictureBox.Height);
             Graphics g = Graphics.FromImage(bmps[0]);
@@ -66,7 +78,7 @@ namespace mars_task
                     int actualY = _startHeightField + (traps_place / 3) * cell;
                     trap_count++;
                     traps[traps_place] = new Tuple<int, int, int>(actualX, actualY, 1);
-                    DrawBell(actualX, actualY, g);
+                    drawBell(actualX, actualY, g);
                 }
                 if (trap_count == 3) { trap = false; }
             }
@@ -81,14 +93,20 @@ namespace mars_task
                     int actualY = _startHeightField + (traps_place / 3) * cell;
                     trap_count++;
                     traps[traps_place] = new Tuple<int, int, int>(actualX, actualY, 2);
-                    DrawProto(actualX, actualY, g);
+                    drawProto(actualX, actualY, g);
                 }
                 if (trap_count == 3) { trap = false; }
             }
             bmps[1] = bmps[0].Clone(new RectangleF(0, 0, pictureBox.Width, pictureBox.Height), bmps[0].PixelFormat);
             pictureBox.Image = bmps[0];
         }
-        public void DrawBell(int x, int y, Graphics g)
+        /// <summary>
+        /// рисует колокольчик
+        /// </summary>
+        /// <param name="x">ширина клетки</param>
+        /// <param name="y">высота клетки</param>
+        /// <param name="g">средство рисования</param>
+        public void drawBell(int x, int y, Graphics g)
         {
             Pen pen = new Pen(Color.Black, 3);
             g.DrawLine(pen, x + 30, y + 5, x + 55, y + 30);
@@ -96,7 +114,13 @@ namespace mars_task
             g.DrawLine(pen, x + 30, y + 55, x + 5, y + 30);
             g.DrawLine(pen, x + 5, y + 30, x + 30, y + 5);
         }
-        public void DrawProto(int x, int y, Graphics g)
+        /// <summary>
+        /// рисование детектора
+        /// </summary>
+        /// <param name="x">ширина клетки</param>
+        /// <param name="y">высота клетки</param>
+        /// <param name="g">средство рисования</param>
+        public void drawProto(int x, int y, Graphics g)
         {
             Pen pen = new Pen(Color.Black, 3);
             g.DrawLine(pen, x + 30, y + 5, x + 40, y + 20);
@@ -109,30 +133,45 @@ namespace mars_task
             g.DrawLine(pen, x + 20, y + 20, x + 30, y + 5);
         }
         Array directions = typeof(Direction).GetEnumValues();
-        private void DrawAndMoveCreature(Graphics g, IEntity entity)
+        /// <summary>
+        /// движение и отрисовка существа, закраска активированных ловушек
+        /// </summary>
+        /// <param name="g">средство рисования</param>
+        /// <param name="entity">существо</param>
+        private void drawAndMoveCreature(Graphics g, IEntity entity)
         {
             List<Point> points = entity.GetPoints();
             int typeEntity = entity.GetTypeEntity();
-            entity.MoveEntity(directions, cell);
+            entity.MoveEntity(directions, _startHeightField, _startWidthField, cell);
             entity.SetPoints(points);
             brushTraps(g);
             for (int i = 0; i < entities.Count; i++)
             {
                 int typeEnt = entities[i].GetTypeEntity();
                 if (i != typeEntity - 1 && typeEnt != 0) { 
-                    entities[i].DrawEntity(g, traps); 
+                    entities[i].DrawEntity(g); 
                 }
             }
-            entities[typeEntity - 1].DrawEntity(g, traps);
+            entities[typeEntity - 1].DrawEntity(g);
             pictureBox.Image = bmps[0];
         }
+        /// <summary>
+        /// создание существа
+        /// </summary>
+        /// <param name="color">цвет</param>
+        /// <param name="typeEntity">тип</param>
+        /// <param name="start">середина пол верзней границе поля</param>
         private void createEntity(Color color, int typeEntity, int start)
         {
             entities[typeEntity - 1] = new Creature(color, typeEntity, start);
             bmps[0] = bmps[1].Clone(new RectangleF(0, 0, pictureBox.Width, pictureBox.Height), bmps[1].PixelFormat);
             Graphics g = Graphics.FromImage(bmps[0]);
-            DrawAndMoveCreature(g, entities[typeEntity - 1]);
+            drawAndMoveCreature(g, entities[typeEntity - 1]);
         }
+        /// <summary>
+        /// проверка и закраска ловушек
+        /// </summary>
+        /// <param name="g"></param>
         private void brushTraps(Graphics g)
         {
             Brush brush = new SolidBrush(Color.Gray);
@@ -159,11 +198,11 @@ namespace mars_task
                                     if (typeEntity == 2 && marsh[num_trap / 3, num_trap % 3] == 1)
                                     {
                                         g.FillRectangle(brush, x + 2, y + 2, 57, 57);
-                                        DrawBell(x, y, g);
+                                        drawBell(x, y, g);
                                     } else if (typeEntity == 1 && marsh[num_trap / 3, num_trap % 3] == 2)
                                     {
                                         g.FillRectangle(brush, x + 2, y + 2, 57, 57);
-                                        DrawBell(x, y, g);
+                                        drawBell(x, y, g);
                                     }
                                 }
                                 else if (traps[num_trap].Item3 == 2)
@@ -171,12 +210,12 @@ namespace mars_task
                                     if (typeEntity == 3 && marsh[num_trap / 3, num_trap % 3] == 1)
                                     {
                                         g.FillRectangle(brush, x + 2, y + 2, 57, 57);
-                                        DrawProto(x, y, g);
+                                        drawProto(x, y, g);
                                     }
                                     else if (typeEntity == 1 && marsh[num_trap / 3, num_trap % 3] == 2)
                                     {
                                         g.FillRectangle(brush, x + 2, y + 2, 57, 57);
-                                        DrawProto(x, y, g);
+                                        drawProto(x, y, g);
                                     }
                                 }
                             }
@@ -185,18 +224,38 @@ namespace mars_task
                 }
             }
         }
+        /// <summary>
+        /// создать кошку
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void catButton_Click(object sender, EventArgs e)
         {
             createEntity(Color.Red, 1, _startHeightField);
         }
+        /// <summary>
+        /// создать вампуса
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void vampusButton_Click(object sender, EventArgs e)
         {
             createEntity(Color.Orange, 2, _startHeightField);
         }
+        /// <summary>
+        /// создать призрака
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ghostButton_Click(object sender, EventArgs e)
         {
             createEntity(Color.BlueViolet, 3, _startHeightField);
         }
+        /// <summary>
+        /// пересоздать карту
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void generateButton_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < entities.Count; i++)
@@ -204,8 +263,13 @@ namespace mars_task
                 entities[i].ClearPoints();
             }
             traps = new Tuple<int, int, int>[9];
-            Draw();
+            draw();
         }
+        /// <summary>
+        /// очистить траектории
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void clearButton_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < entities.Count; i++)

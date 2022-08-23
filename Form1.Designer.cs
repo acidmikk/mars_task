@@ -59,7 +59,7 @@
             this.clearButton.Name = "clearButton";
             this.clearButton.Size = new System.Drawing.Size(397, 23);
             this.clearButton.TabIndex = 1;
-            this.clearButton.Text = "clear";
+            this.clearButton.Text = "Стереть траектории";
             this.clearButton.UseVisualStyleBackColor = true;
             this.clearButton.Click += new System.EventHandler(this.clearButton_Click);
             // 
@@ -69,37 +69,40 @@
             this.generateButton.Name = "generateButton";
             this.generateButton.Size = new System.Drawing.Size(397, 23);
             this.generateButton.TabIndex = 2;
-            this.generateButton.Text = "restart map";
+            this.generateButton.Text = "Перетасовать ловушки";
             this.generateButton.UseVisualStyleBackColor = true;
             this.generateButton.Click += new System.EventHandler(this.generateButton_Click);
             // 
             // catButton
             // 
+            this.catButton.ForeColor = System.Drawing.Color.Red;
             this.catButton.Location = new System.Drawing.Point(12, 452);
             this.catButton.Name = "catButton";
             this.catButton.Size = new System.Drawing.Size(397, 23);
             this.catButton.TabIndex = 3;
-            this.catButton.Text = "cat";
+            this.catButton.Text = "Запустить кошку";
             this.catButton.UseVisualStyleBackColor = true;
             this.catButton.Click += new System.EventHandler(this.catButton_Click);
             // 
             // vampusButton
             // 
+            this.vampusButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.vampusButton.Location = new System.Drawing.Point(12, 481);
             this.vampusButton.Name = "vampusButton";
             this.vampusButton.Size = new System.Drawing.Size(397, 23);
             this.vampusButton.TabIndex = 4;
-            this.vampusButton.Text = "vampus";
+            this.vampusButton.Text = "Запустить вампуса";
             this.vampusButton.UseVisualStyleBackColor = true;
             this.vampusButton.Click += new System.EventHandler(this.vampusButton_Click);
             // 
             // ghostButton
             // 
+            this.ghostButton.ForeColor = System.Drawing.Color.Gray;
             this.ghostButton.Location = new System.Drawing.Point(12, 510);
             this.ghostButton.Name = "ghostButton";
             this.ghostButton.Size = new System.Drawing.Size(397, 23);
             this.ghostButton.TabIndex = 5;
-            this.ghostButton.Text = "ghost";
+            this.ghostButton.Text = "Запустить приведение";
             this.ghostButton.UseVisualStyleBackColor = true;
             this.ghostButton.Click += new System.EventHandler(this.ghostButton_Click);
             // 

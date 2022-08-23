@@ -25,8 +25,7 @@ namespace mars_task
         /// отрисовка сущности
         /// </summary>
         /// <param name="g">средство рисование</param>
-        /// <param name="traps">расположение ловушек</param>
-        public override void DrawEntity(Graphics g, Tuple<int, int, int>[] traps)
+        public override void DrawEntity(Graphics g)
         {
             Pen pen = new Pen(MainColor, 2);
             Brush brush = new SolidBrush(Color.Gray);
@@ -39,12 +38,12 @@ namespace mars_task
         /// движение
         /// </summary>
         /// <param name="directions">направления</param>
-        /// <param name="cell">ширина клетки</param>
-        public override void MoveEntity(Array directions, int cell)
+        /// <param name="_startHeightField">верхняя граница поля</param>
+        /// <param name="_startWidthField">левая граница поля</param>
+        /// <param name="cell">ширина/высота клетки</param>
+        public override void MoveEntity(Array directions, int _startHeightField, int _startWidthField, int cell)
         {
             Random rnd = new Random();
-            int _startHeightField = 132 - 90;
-            int _startWidthField = 200 - 90;
             bool outField = true;
             while (outField)
             {
